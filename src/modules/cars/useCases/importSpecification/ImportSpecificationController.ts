@@ -1,14 +1,16 @@
 import { ImportSpecificationUseCase } from "./ImportSpecificationUseCase";
 import { Request, Response } from "express"
+import { container } from "tsyringe";
 
 
 class ImportSpecificationController{
-    constructor( private importSpecificationUseCase: ImportSpecificationUseCase){}
 
-    handle(request: Request, response: Response): Response{
+    async handle(request: Request, response: Response): Promise<Response>{
         const { file } = request
 
-        this.importSpecificationUseCase.execute(file)
+        const importSpecificationUseCase = container.resolve(ImportSpecificationUseCase)
+
+        await importSpecificationUseCase.execute(file)
 
         return response.sendStatus(201)
     }
